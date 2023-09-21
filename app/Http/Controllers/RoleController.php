@@ -81,7 +81,7 @@ class RoleController extends Controller
         $role = Role::find($id);
         $permission = Permission::get();
         $rolePermission = DB::table('role_has_permission')->where('role_has_permission.id', $id)
-            ->pluck('role_has_permission.role_id', 'role_has_permission.permission_id')
+            ->pluck('role_has_permission.permission_id', 'role_has_permission.permission_id')
             ->all(); //consulta la db para obtener los permisos asociados al rol según el id dado
         return view('roles.editar', compact('role', 'permission', 'rolePermission'));
     }
