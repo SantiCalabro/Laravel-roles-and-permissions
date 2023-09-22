@@ -15,7 +15,7 @@ class BlogController extends Controller
 
     function __construct() //Configuramos los permisos de los métodos
     {
-        $this->middleware('permission:see-blog | create-blog | edit-blog | delete-blog', ['only' => ['index']]);
+        $this->middleware('permission:see-blog|create-blog|edit-blog|delete-blog', ['only' => ['index']]);
         $this->middleware('permission: create-blog', ['only' => ['create, store']]);
         $this->middleware('permission: edit-blog', ['only' => ['edit, update']]);
         $this->middleware('permission: delete-blog', ['only' => ['destroy']]);
@@ -72,7 +72,7 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        return view('blogs.editar', compact($blog));
+        return view('blogs.editar', compact('blog'));
     }
 
     /**
@@ -84,12 +84,12 @@ class BlogController extends Controller
      */
     public function update(Request $request, Blog $blog)
     {
-        dd($blog, $request);
+
         $this->validate($request, [
             'title' => 'required',
-            'content' => 'content'
+            'content' => 'required'
         ]);
-        $editBlog = Blog::find($blog);
+        $editBlog = Blog::find($blog->id);
         $editBlog->update($request->all());
         return redirect()->route('blogs.index');
     }

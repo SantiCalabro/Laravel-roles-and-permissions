@@ -12,7 +12,7 @@ class RoleController extends Controller
 {
     function __construct() //Configuramos los permisos de los métodos
     {
-        $this->middleware('permission:see-role | create-role | edit-role | delete-role', ['only' => ['index']]);
+        $this->middleware('permission:see-role|create-role|edit-role|delete-role', ['only' => ['index']]);
         //Solo el método index, se puede ver && crear && editar && borrar un rol.
         $this->middleware('permission: create-role', ['only' => ['create, store']]);
         //create nos va a devolver la plantilla, y store almacena en db.
