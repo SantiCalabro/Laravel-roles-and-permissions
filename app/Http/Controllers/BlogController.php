@@ -47,7 +47,7 @@ class BlogController extends Controller
     {
         $this->validate($request, [
             'title' => 'required',
-            'content' => 'content'
+            'content' => 'required'
         ]);
         Blog::create($request->all());
         return redirect()->route('blogs.index');
@@ -72,7 +72,7 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        return view('blog.editar', compact($blog));
+        return view('blogs.editar', compact($blog));
     }
 
     /**
@@ -84,12 +84,13 @@ class BlogController extends Controller
      */
     public function update(Request $request, Blog $blog)
     {
+        dd($blog, $request);
         $this->validate($request, [
             'title' => 'required',
             'content' => 'content'
         ]);
-
-        $blog->update($request->all());
+        $editBlog = Blog::find($blog);
+        $editBlog->update($request->all());
         return redirect()->route('blogs.index');
     }
 
@@ -101,8 +102,7 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog)
     {
-        Blog::find($blog)->delete();
-        //o $blog->delete()
+        $blog->delete();
         return redirect()->route('blogs.index');
     }
 }

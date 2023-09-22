@@ -45,7 +45,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email|unique:users, email',
+            'email' => 'required|email|unique:users,email,'.$id,
             'password' => 'required|same:confirm-password',
             'roles' => 'required'
         ]);
@@ -80,7 +80,7 @@ class UserController extends Controller
         $user = User::find($id);
         $roles = Role::pluck('name', 'name')->all(); //Recupera los nombres de todos los roles
         $userRole = $user->roles->pluck('name', 'name')->all(); //Recupera los nombres de los roles que tiene el usuario
-        return view('users.editar', compact('user, roles, userRole'));
+        return view('users.editar', compact('user', 'roles', 'userRole'));
     }
 
     /**
@@ -92,9 +92,10 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+     
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email|unique:users, email',
+            // 'email' => 'required|email|unique:users, email',
             'password' => 'same:confirm-password',
             'roles' => 'required'
         ]);
@@ -107,6 +108,7 @@ class UserController extends Controller
         }
 
         $user = User::find($id);
+       
         $user->update($input);
         DB::table('model_has_roles')->where('model_id', $id)->delete(); //Se borra primero, no se pisa
         $user->assignRole($input['roles']);

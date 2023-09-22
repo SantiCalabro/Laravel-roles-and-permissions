@@ -52,7 +52,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, ['name' => 'required', 'permission' => 'required']);
+        $this->validate($request, ['name' => 'required', 'permissions' => 'required']);
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permissions')); //attach del permiso
         return redirect()->route('roles.index'); //carpeta roles, index.blade
@@ -61,7 +61,7 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $id 
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -78,12 +78,15 @@ class RoleController extends Controller
     public function edit($id)
     //Esta función está relacionada a la vista del formulario para editar. Preselecciona los permisos disponibles para ese rol pero aún no los actualiza
     {
-        $role = Role::find($id);
-        $permission = Permission::get();
-        $rolePermission = DB::table('role_has_permission')->where('role_has_permission.id', $id)
-            ->pluck('role_has_permission.permission_id', 'role_has_permission.permission_id')
-            ->all(); //consulta la db para obtener los permisos asociados al rol según el id dado
-        return view('roles.editar', compact('role', 'permission', 'rolePermission'));
+        {
+            $role = Role::find($id);
+            $permission = Permission::get();
+            $rolePermission = DB::table('role_has_permissions')->where('role_id', $id)
+                ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
+                ->all(); //consulta la db para obtener los permisos asociados al rol según el id dado
+            return view('roles.editar', compact('role', 'permission', 'rolePermission'));
+        }
+    
     }
 
     /**
@@ -99,7 +102,7 @@ class RoleController extends Controller
         $role = Role::find($id);
         $role->name = $request->input('name');
         $role->save();
-        $role->syncPermissions($request->input('permission'));
+        $role->syncPermissions($request->input('permission'));  
         return redirect()->route('roles.index');
     }
 
